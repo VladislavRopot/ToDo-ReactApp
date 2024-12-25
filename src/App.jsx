@@ -3,11 +3,21 @@ import './App.css';
 
 function App() {
   const [inputValue, setInputValue] = useState('');
+  const [todoItems, setTodoItems] = useState([]);
 
   const addTodoItem = () => {
-    console.log(inputValue);
-    
-  }
+    setTodoItems([...todoItems, inputValue]);
+    setInputValue('');
+  };
+
+  const removeTodoItem = (index) => {
+    const confirmed = window.confirm('Are you sure?');
+    if (confirmed === true) {
+      todoItems.splice(index, 1);
+
+      setTodoItems([...todoItems]);
+    }
+  };
 
   return (
     <div >
@@ -17,7 +27,27 @@ function App() {
           value={inputValue}
           onChange={(event) => setInputValue(event.target.value)} />
 
-        <button onClick={() => addTodoItem()}>Add</button>
+        <button disabled={inputValue === ''} onClick={() => addTodoItem()}>Add</button>
+      </div>
+
+      <div>
+        {
+          todoItems.length === 0 ? (
+            <p>There are no todo items!</p>
+          ) : (
+            <ul>
+              {
+                todoItems.map((item, index) => ( // Map pentru ca returneaa un nou element
+                  <li key={index}>
+                    <span>{item}</span>
+
+                    <button onClick={() => removeTodoItem(index)}>Delete</button>
+                  </li>
+                ))
+              }
+            </ul>
+          )
+        }
       </div>
     </div>
   );
